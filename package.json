@@ -1,0 +1,23 @@
+{
+  "name": "task_manager",
+  "version": "1.0.0",
+  "description": "This Task_Manager app is Full-Mern-Stack web developed application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SarthakYelne/Task_Manager.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SarthakYelne/Task_Manager/issues"
+  },
+  "homepage": "https://github.com/SarthakYelne/Task_Manager#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
