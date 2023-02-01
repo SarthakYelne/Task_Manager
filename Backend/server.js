@@ -1,24 +1,21 @@
  const dotenv = require("dotenv").config(); 
  const express = require("express");
  const mongoose = require("mongoose");
- const Task = require("./models/task_models");
- const task_route = require("./routes/task_routes");
  const app = express()
 
  // Middleware
 app.use(express.json());
-app.use(express.urlencoded({extended: false}));
-app.use("/tasks",task_route);
-
 
  // Routes Page
  app.get("/", (req, res) => {
     res.send("Home Page!!!");
  });
 
-
-
-
+ // Create a Task
+ app.post("/tasks", async (req, res) => {
+      console.log(req.body);
+      res.send("Task Created");
+ })
 
  const PORT = process.env.PORT || 5000;
 
