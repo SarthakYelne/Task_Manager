@@ -2,12 +2,15 @@ const dotenv = require("dotenv").config();
  const express = require("express");
  const mongoose = require("mongoose");
  const Task = require("./models/task_models");
+ const cors = require("cors");
  const task_route = require("./routes/task_routes");
- const app = express()
+ const app = express();
 
  // Middleware
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
+app.use(cors());
+
 app.use("/tasks",task_route);
 
 
