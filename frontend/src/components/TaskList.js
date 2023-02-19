@@ -9,8 +9,10 @@ import loadingImg from "../assets/loader.gif";
 
 const TaskList = () => {
     const [tasks, setTask] = useState([]);
-    const [completedTask, setCompletedTask] = useState([]);
+    const [completedTask, setCompletedTasks] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [taskID, setTaskID] = useState("");
     const [formData, setFormData] = useState({
         name: "",
         completed: false
@@ -47,22 +49,81 @@ const TaskList = () => {
                 await axios.post(`${URL}/tasks`, formData);
                 toast.success("Task added succesfully");
                 setFormData({ ...formData, name: "" });
+                getTasks();
             } catch (error) {
                 toast.error(error.message);
             }
-    } 
+    };
+
+    const deleteTask = async (id) => {
+        try {
+            await axios.delete(`${URL}/tasks/${id}`);
+            getTasks();
+        } catch (error) {
+            toast.error(error.message);
+        }
+    };
+
+    const getSingleTask = async (task) => {
+        setFormData({name: task.name, completed: false});
+        setTaskID(task._id);
+        setIsEditing(true);
+    };
+
+    useEffect(() => {
+       const cTask = tasks.filter((task) => {
+        return task.completed === true;
+       })
+       setCompletedTasks(cTask);
+    }, [tasks]);
+
+    const updateTask = async (e) => {
+        e.preventDefault();
+        if (name === "") {
+            return toast.error("Input field cannot be empty.");
+        }
+         try {
+            await axios.put(`${URL}/tasks/${taskID}`, formData);
+            setFormData({ ...formData, name:""});
+            setIsEditing(false);
+            getTasks();
+         } catch (error) {
+            toast.error(error.message);
+         }
+    };
+
+    const setToComplete = async (task) => {
+        const newFormData = {
+            name: task.name,
+            completed: true,
+        }
+        try {
+            await axios.put(`${URL}/tasks/${task._id}`, newFormData);
+            getTasks();
+        } catch (error) {
+            toast.error(error.message);
+        }
+    };
 
     return <div>
                  <h1>Task Manager</h1>
-                 <TaskForm name={name} handleInputChange={handleInputChange} createTask={createTask}/>
-                 <div className="--flex-between --pb">
+                 <TaskForm 
+                 name={name} 
+                 handleInputChange={handleInputChange} 
+                 createTask={createTask} 
+                 isEditing={isEditing}
+                 updateTask={updateTask}
+                  />
+                  {tasks.length > 0 && (
+                <div className="--flex-between --pb">
                     <p>
-                        <b>Total Tasks :</b>0
+                        <b>Total Tasks :</b>{tasks.length}
                     </p>
                     <p>
-                        <b>Completed Tasks :</b>0
+                        <b>Completed Tasks :</b>{completedTask.length}
                     </p>
                  </div>
+                  )}
                  <hr />
                  {
                     isLoading && (
@@ -77,7 +138,13 @@ const TaskList = () => {
                             <>
                             {tasks.map((task, index) => {
                                 return(
-                                    <Task key={task._id} task={task} index={index} />
+                                    <Task 
+                                    key={task._id} 
+                                    task={task} 
+                                    index={index}
+                                    deleteTask={deleteTask}
+                                    getSingleTask={getSingleTask}
+                                    setToComplete={setToComplete} />
                                 )
                             })}
                             </>
