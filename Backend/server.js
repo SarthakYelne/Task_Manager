@@ -9,7 +9,9 @@ const dotenv = require("dotenv").config();
  // Middleware
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
-app.use(cors());
+app.use(cors({
+   origin: ["http://localhost:3000", "https://task-manager-react-app.onrender.com"]
+}));
 
 app.use("/tasks",task_route);
 
